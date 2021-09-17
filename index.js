@@ -5,6 +5,7 @@ const cardRoutes = require('./routes/card');
 const addRoutes = require('./routes/add');
 const coursesRoutes = require('./routes/courses');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const app = express();
 const hbs = exphbs.create({
@@ -24,7 +25,19 @@ app.use('/add', addRoutes);
 app.use('/courses', coursesRoutes);
 app.use('/card', cardRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+async function start() {
+  const PORT = process.env.PORT || 3000;
+  const password = 'rOXS5EiLVnXxEGUC';
+  const url = `mongodb+srv://ilya:${password}@cloud.gjaim.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
+  try {
+    await mongoose.connect(url, { useNewUrlParser: true });
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+start();
